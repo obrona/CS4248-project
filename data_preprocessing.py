@@ -1,7 +1,7 @@
 # requirements: datasets 
 from datasets import Dataset 
 
-# given .src and .tgt files, create the dataset 
+# given .src and .tgt filepaths, create the dataset 
 def create_dataset(source_file, target_file): 
     
     # read source file 
@@ -39,3 +39,25 @@ nucle_dataset = create_dataset(nucle_source, nucle_target)
 # create W&I+LOCNESS v2.1 dataset 
 wi_dataset = create_dataset(wi_source, wi_target)
 """
+
+# tokenize the batch of data passed into the function 
+def tokenize_data_batch(tokenizer, data_batch):
+    # tokenize inputs and labels 
+    inputs = tokenizer(data_batch["source"], max_length=128, truncation=True)
+    labels = tokenizer(data_batch["target"], max_length=128, truncation=True)
+
+    # add correct target output to tokenized input data 
+    inputs["labels"] = labels["input_ids"]
+    
+    return inputs 
+
+# converts text to tokenized examples from the dataset  
+def tokenize_dataset(dataset): 
+    # applies tokenize_data_batch to the dataset passed into the function  
+    tokenized_dataset = dataset.map(
+        tokenize_data_batch,
+        batched=True,
+        remove_columns=["source", "target"]
+    )
+
+    return tokenized_dataset
