@@ -1,6 +1,22 @@
 # requirements: datasets 
 from datasets import Dataset 
 
+# filepaths to .src and .tgt files for FCE v2.1 dataset 
+fce_source = r""
+fce_target = r""
+
+# filepaths to .src and .tgt files for Lang-8 Corpus of Learner English dataset 
+lang8_source = r"" 
+lang8_target = r""
+
+# filepaths to .src and .tgt files for NUCLE (NUS Corpus of Learner English) dataset 
+nucle_source = r""
+nucle_target = r""
+
+# filepaths to .src and .tgt files for W&I+LOCNESS v2.1 dataset
+wi_source = r""
+wi_target = r""
+
 # given .src and .tgt filepaths, create the dataset 
 def create_dataset(source_file, target_file): 
     
@@ -22,23 +38,7 @@ def create_dataset(source_file, target_file):
         "target": target_sentences
     })
 
-    print("dataset created.")
     return dataset 
-
-# uncomment below to create training datasets 
-""" 
-# create FCE v2.1 dataset 
-fce_dataset = create_dataset(fce_source, fce_target)
-
-# create Lang-8 Corpus of Learner English dataset 
-lang8_dataset = create_dataset(lang8_source, lang8_target)
-
-# create NUCLE (NUS Corpus of Learner English) dataset 
-nucle_dataset = create_dataset(nucle_source, nucle_target)
-
-# create W&I+LOCNESS v2.1 dataset 
-wi_dataset = create_dataset(wi_source, wi_target)
-"""
 
 # tokenize the batch of data passed into the function 
 def tokenize_data_batch(tokenizer, data_batch):
@@ -61,3 +61,23 @@ def tokenize_dataset(dataset):
     )
 
     return tokenized_dataset
+
+# create all datasets from their respective .src and .tgt files 
+def create_all_datasets(): 
+    # create FCE v2.1 dataset 
+    fce_dataset = create_dataset(fce_source, fce_target)
+    print("fce_dataset created.")
+
+    # create Lang-8 Corpus of Learner English dataset 
+    lang8_dataset = create_dataset(lang8_source, lang8_target)
+    print("lang8_dataset created.")
+    
+    # create NUCLE (NUS Corpus of Learner English) dataset 
+    nucle_dataset = create_dataset(nucle_source, nucle_target)
+    print("nucle_dataset created.")
+    
+    # create W&I+LOCNESS v2.1 dataset 
+    wi_dataset = create_dataset(wi_source, wi_target)
+    print("wi_dataset created.")
+    
+    return fce_dataset, lang8_dataset, nucle_dataset, wi_dataset 
