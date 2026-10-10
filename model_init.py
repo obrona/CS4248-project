@@ -23,6 +23,10 @@ def initialise_model(model_name, save_path):
     print("BART downloaded successfully")
     return tokenizer, model
 
+# initialise small BART model 
+def initialise_small_model(): 
+    return initialise_model(small_model_name, small_save_path)
 
-# to download smaller BART model 
-initialise_model(model_name=small_model_name, save_path=small_save_path) # replace with large_model_name and large_save_path to download the larger model
+# initialise large BART model 
+def initialise_large_model(): 
+    return initialise_model(large_model_name, large_save_path)
