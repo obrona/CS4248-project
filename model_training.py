@@ -40,3 +40,11 @@ def train_model(tokenizer, model, output_dir, tokenized_dataset):
     tokenizer.save_pretrained(output_dir)
 
     print("training completed. model and tokenizer saved in: ", output_dir)  
+
+# train model on multiple datasets 
+def train_model_alldatasets(tokenizer, model, output_dir, tokenized_dataset_lst): 
+    # loop through list of tokenized datasets 
+    for tokenized_dataset in tokenized_dataset_lst: 
+        train_model(tokenizer, model, output_dir, tokenized_dataset) 
+
+    print("training completed for all datasets")
