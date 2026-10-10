@@ -52,10 +52,10 @@ def tokenize_data_batch(tokenizer, data_batch):
     return inputs 
 
 # converts text to tokenized examples from the dataset  
-def tokenize_dataset(dataset): 
+def tokenize_dataset(tokenizer, dataset): 
     # applies tokenize_data_batch to the dataset passed into the function  
     tokenized_dataset = dataset.map(
-        tokenize_data_batch,
+        lambda data_batch: tokenize_data_batch(tokenizer, data_batch),
         batched=True,
         remove_columns=["source", "target"]
     )
@@ -80,4 +80,15 @@ def create_all_datasets():
     wi_dataset = create_dataset(wi_source, wi_target)
     print("wi_dataset created.")
     
-    return fce_dataset, lang8_dataset, nucle_dataset, wi_dataset 
+    return [fce_dataset, lang8_dataset, nucle_dataset, wi_dataset] 
+
+# given a list of datasets, tokenize all datasets  
+def tokenize_all_datasets(tokenizer, datasets_lst): 
+    tokenized_datasets = [] 
+
+    # loop through list of datasets, and tokenize each dataset 
+    for dataset in datasets_lst: 
+        tokenized_dataset = tokenize_dataset(tokenizer, dataset)
+        tokenized_datasets.append(tokenized_dataset)
+    
+    return tokenized_datasets 
