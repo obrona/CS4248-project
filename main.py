@@ -4,9 +4,11 @@ import model_training as model_training
 
 OUTPUT_DIR = r""
 
+# main function 
 def main(): 
-    # initialise tokenizer and model 
+    # initialise tokenizer and model (comment and uncomment accordingly)
     tokenizer, model = model_init.initialise_small_model() 
+    # tokenizer, model = model_init.initialise_large_model() 
 
     # create and tokenize datasets 
     dataset_lst = data_preprocessing.create_all_datasets() 
