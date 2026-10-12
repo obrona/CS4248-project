@@ -2,16 +2,16 @@
 from datasets import Dataset 
 
 # filepaths to .src and .tgt files for FCE v2.1 dataset 
-fce_source = r""
-fce_target = r""
+fce_source = "fce-src-tgt/fce.train.gold.bea19.src"
+fce_target = "fce-src-tgt/fce.train.gold.bea19.tgt"
 
 # filepaths to .src and .tgt files for Lang-8 Corpus of Learner English dataset 
 lang8_source = r"" 
 lang8_target = r""
 
 # filepaths to .src and .tgt files for NUCLE (NUS Corpus of Learner English) dataset 
-nucle_source = r""
-nucle_target = r""
+nucle_source = "nucle-src-tgt/nucle.train.gold.bea19.src"
+nucle_target = "nucle-src-tgt/nucle.train.gold.bea19.tgt"
 
 # filepaths to .src and .tgt files for W&I+LOCNESS v2.1 dataset
 wi_source = r""
@@ -19,14 +19,14 @@ wi_target = r""
 
 # given .src and .tgt filepaths, create the dataset 
 def create_dataset(source_file, target_file): 
-    
+
     # read source file 
     with open(source_file, "r", encoding="utf-8") as source_file:
-        source_sentences = [line.strip() for line in source_file if line.strip()]
+        source_sentences = [line.rstrip("\r\n") for line in source_file]
 
     # read target file 
     with open(target_file, "r", encoding="utf-8") as target_file:
-        target_sentences = [line.strip() for line in target_file if line.strip()]
+        target_sentences = [line.rstrip("\r\n") for line in target_file]
 
     # check that the files are aligned
     if len(source_sentences) != len(target_sentences):
