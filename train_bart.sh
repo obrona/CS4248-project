@@ -3,7 +3,7 @@
 #SBATCH --partition=gpu-long
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --gpus=a100-40:1
+#SBATCH --gpus=h100-47:1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --time=48:00:00
@@ -29,8 +29,8 @@ python -c 'import sys; assert sys.version_info[:2] == (3, 12), "The venv must us
 
 echo "Installing training packages..."
 python -m pip install --upgrade pip
-# Use the CUDA 11.8 build, which supports the cluster's A100 GPUs.
-python -m pip install 'torch==2.7.1' --index-url https://download.pytorch.org/whl/cu118
+# Use the CUDA 13.0 build for the cluster's GPUs.
+python -m pip install 'torch==2.9.1' --index-url https://download.pytorch.org/whl/cu130
 python -m pip install -r requirements.txt
 
 echo "Starting BART-base training..."

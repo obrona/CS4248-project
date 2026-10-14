@@ -11,6 +11,9 @@ The job creates a Python 3.12 `.venv`, installs the packages, downloads
 once on `w&-src-tgt/ABCN.dev.gold.bea19.src` / `.tgt`, then saves the final weights.
 There are no intermediate checkpoints or evaluations during training.
 
+The job installs PyTorch 2.9.1 with CUDA 13.0 wheels from the official PyTorch
+index, matching the cluster's CUDA 13.0 environment.
+
 Transfer all four `*-src-tgt` directories and `data/raw.zip` along with
 `train_bart.sh`, `train_bart.py`, and `requirements.txt`. The job extracts the gold
 development M2 file from the archive if it is missing. Development data is never
