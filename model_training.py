@@ -1,5 +1,6 @@
-# requirements: transformers
+# requirements: transformers, scikit-learn
 from transformers import DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
+from sklearn.model_selection import train_test_split  
 
 def train_model(tokenizer, model, output_dir, tokenized_dataset): 
     # prepare data as batches 
@@ -22,11 +23,13 @@ def train_model(tokenizer, model, output_dir, tokenized_dataset):
         report_to="none"
     )
 
+    tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.1, seed=42)
+    
     # create trainer 
     trainer = Seq2SeqTrainer(
         model=model,
         args=training_args,
-        train_dataset=tokenized_dataset["train"],
+        train_dataset=tokenized_dataset["train"], 
         eval_dataset=tokenized_dataset["test"],
         processing_class=tokenizer,
         data_collator=data_collator

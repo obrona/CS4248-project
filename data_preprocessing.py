@@ -6,16 +6,20 @@ fce_source = "fce-src-tgt/fce.train.gold.bea19.src"
 fce_target = "fce-src-tgt/fce.train.gold.bea19.tgt"
 
 # filepaths to .src and .tgt files for Lang-8 Corpus of Learner English dataset 
-lang8_source = r"" 
-lang8_target = r""
+lang8_source = "lang8-src-tgt/lang8.train.auto.bea19.src"
+lang8_target = "lang8-src-tgt/lang8.train.auto.bea19.tgt"
 
 # filepaths to .src and .tgt files for NUCLE (NUS Corpus of Learner English) dataset 
 nucle_source = "nucle-src-tgt/nucle.train.gold.bea19.src"
 nucle_target = "nucle-src-tgt/nucle.train.gold.bea19.tgt"
 
 # filepaths to .src and .tgt files for W&I+LOCNESS v2.1 dataset
-wi_source = r""
-wi_target = r""
+wiA_source = "w&-src-tgt/A.train.gold.bea19.src"
+wiA_target = "w&-src-tgt/A.train.gold.bea19.tgt"
+wiB_source = "w&-src-tgt/B.train.gold.bea19.src"
+wiB_target = "w&-src-tgt/B.train.gold.bea19.tgt"
+wiC_source = "w&-src-tgt/C.train.gold.bea19.src"
+wiC_target = "w&-src-tgt/C.train.gold.bea19.tgt"
 
 # given .src and .tgt filepaths, create the dataset 
 def create_dataset(source_file, target_file): 
@@ -77,10 +81,14 @@ def create_all_datasets():
     print("nucle_dataset created.")
     
     # create W&I+LOCNESS v2.1 dataset 
-    wi_dataset = create_dataset(wi_source, wi_target)
-    print("wi_dataset created.")
+    wiA_dataset = create_dataset(wiA_source, wiA_target)
+    print("wiA_dataset created.")
+    wiB_dataset = create_dataset(wiB_source, wiB_target)
+    print("wiB_dataset created.")
+    wiC_dataset = create_dataset(wiC_source, wiC_target)
+    print("wiC_dataset created.")
     
-    return [fce_dataset, lang8_dataset, nucle_dataset, wi_dataset] 
+    return [fce_dataset, lang8_dataset, nucle_dataset, wiA_dataset, wiB_dataset, wiC_dataset] 
 
 # given a list of datasets, tokenize all datasets  
 def tokenize_all_datasets(tokenizer, datasets_lst): 

@@ -1,5 +1,6 @@
 # requirements: transformers, torch
 
+from pathlib import Path 
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 # Model names and save paths for different sizes of BART models
@@ -10,6 +11,10 @@ large_model_name = "gotutiyan/gec-bart-large" # better performance, requires mor
 large_save_path = "./gec-bart-large"
 
 def initialise_model(model_name, save_path):
+    
+    save_path = Path(save_path)
+    save_path.mkdir(parents=True, exist_ok=True)
+
     # Load the tokenizer and model from Hugging Face
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
