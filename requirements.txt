@@ -4,4 +4,6 @@ datasets==4.2.0
 accelerate==1.11.0
 errant==3.0.2
 spacy==3.8.7
+# spaCy imports click directly; declare it explicitly for clean environments.
+click==8.1.8
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl

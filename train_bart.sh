@@ -33,6 +33,10 @@ python -m pip install --upgrade pip
 python -m pip install 'torch==2.9.1' --index-url https://download.pytorch.org/whl/cu130
 python -m pip install -r requirements.txt
 
+echo "Checking training dependencies and ERRANT's English model..."
+python -m pip check
+python -c 'import click; import errant; from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, Seq2SeqTrainer; errant.load("en"); print("Training dependencies OK")'
+
 echo "Starting BART-base training..."
 srun python -u train_bart.py
 echo "Done. Final weights and evaluation results: outputs/bart-base-gec/"
