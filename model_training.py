@@ -1,4 +1,4 @@
-# requirements: transformers, scikit-learn
+# requirements: transformers, scikit-learn, 'accelerate>=1.1.0'
 from transformers import DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
 from sklearn.model_selection import train_test_split  
 
