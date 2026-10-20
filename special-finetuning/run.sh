@@ -1,8 +1,8 @@
 #!/bin/bash
 # Slurm job for category-weighted fine-tuning of facebook/bart-base (and CoNLL-14 eval).
 #
-# Submit from the special-fine-tuning/ directory:
-#   cd special-fine-tuning
+# Submit from the special-finetuning/ directory:
+#   cd special-finetuning
 #   sbatch run.sh            # fine-tune with alpha=3 beta=0.5 w_max=10 -> output/a3_b0.5_w10/
 #   sbatch run.sh eval       # evaluate output/a3_b0.5_w10 on CoNLL-2014 with M2Scorer
 #   sbatch run.sh eval --run_dir output/a2_b1_w10   # evaluate another run
@@ -23,10 +23,10 @@ set -euo pipefail
 SUBMIT_DIR="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 if [[ -f "$SUBMIT_DIR/special-finetune.py" ]]; then
     SCRIPT_DIR="$SUBMIT_DIR"
-elif [[ -f "$SUBMIT_DIR/special-fine-tuning/special-finetune.py" ]]; then
-    SCRIPT_DIR="$SUBMIT_DIR/special-fine-tuning"
+elif [[ -f "$SUBMIT_DIR/special-finetuning/special-finetune.py" ]]; then
+    SCRIPT_DIR="$SUBMIT_DIR/special-finetuning"
 else
-    echo "Cannot find special-finetune.py; submit from the special-fine-tuning/ directory." >&2
+    echo "Cannot find special-finetune.py; submit from the special-finetuning/ directory." >&2
     exit 1
 fi
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"

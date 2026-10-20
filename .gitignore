@@ -5,5 +5,5 @@ __pycache__/
 .env
 standard-finetuning/output/*
 !standard-finetuning/output/.gitkeep
-special-fine-tuning/output/*
-!special-fine-tuning/output/.gitkeep
+special-finetuning/output/*
+!special-finetuning/output/.gitkeep
