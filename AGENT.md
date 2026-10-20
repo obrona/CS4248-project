@@ -14,8 +14,10 @@ wi+locness/m2/ABCN.dev.gold.bea19.m2
 CoNLL-2014 shared task
 
 ## Compute environment
-Installing of a .venv and running the code has to be done on SoC Compute Cluster which runs slurm.<br>
+Installing of a .venv and running the code has to be done on SoC Compute Cluster which runs slurm.
+
 Python 3.12.3
+
 | GPU | CUDA version |
 |-|-|
 | titan rtx | 13.0 |

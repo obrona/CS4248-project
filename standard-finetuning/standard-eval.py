@@ -87,7 +87,11 @@ def generate(model, tokenizer, sources, batch_size, num_beams, max_len, device):
             padding=True,
             return_tensors="pt",
         ).to(device)
-        out = model.generate(**enc, num_beams=num_beams, max_new_tokens=max_len, early_stopping=True)
+        # bart-base's config sets no_repeat_ngram_size=3 (a summarization default); GEC
+        # must be free to copy repeated n-grams from the source, so disable it.
+        out = model.generate(
+            **enc, num_beams=num_beams, max_new_tokens=max_len, early_stopping=True, no_repeat_ngram_size=0
+        )
         texts = tokenizer.batch_decode(out, skip_special_tokens=True, clean_up_tokenization_spaces=False)
         for i, t in zip(idx, texts):
             preds[i] = " ".join(t.split())
