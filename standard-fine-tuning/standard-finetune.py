@@ -2,11 +2,11 @@
 
 Trains for one epoch on all BEA-2019 training data (FCE train+dev, Lang-8,
 NUCLE, W&I A/B/C) with the standard token-level cross-entropy loss.
-No evaluation is run here -- see standard_eval.py.
+No evaluation is run here -- see standard-eval.py.
 
 Usage:
-    python standard_finetune.py                       # full run
-    python standard_finetune.py --max_train_samples 64 --max_steps 2   # smoke test
+    python standard-finetune.py                       # full run
+    python standard-finetune.py --max_train_samples 64 --max_steps 2   # smoke test
 """
 
 import argparse

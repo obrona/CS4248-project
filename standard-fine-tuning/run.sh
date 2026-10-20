@@ -3,10 +3,10 @@
 #
 # Submit from the standard-fine-tuning/ directory:
 #   cd standard-fine-tuning
-#   sbatch standard_finetune.sh            # fine-tune (1 epoch, all training data)
-#   sbatch standard_finetune.sh eval       # evaluate on CoNLL-2014 with M2Scorer
+#   sbatch run.sh            # fine-tune (1 epoch, all training data)
+#   sbatch run.sh eval       # evaluate on CoNLL-2014 with M2Scorer
 # Extra arguments are passed to the Python script, e.g.
-#   sbatch standard_finetune.sh train --batch_size 16
+#   sbatch run.sh train --batch_size 16
 #
 #SBATCH --job-name=bart-gec
 #SBATCH --gpus=a100-40:1          # alternatives: a100-80:1, h100-96:1, h100-47:1, titanrtx:1
@@ -20,12 +20,12 @@ set -euo pipefail
 
 # Slurm runs a copy of this script, so locate the project from the submit directory.
 SUBMIT_DIR="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
-if [[ -f "$SUBMIT_DIR/standard_finetune.py" ]]; then
+if [[ -f "$SUBMIT_DIR/standard-finetune.py" ]]; then
     SCRIPT_DIR="$SUBMIT_DIR"
-elif [[ -f "$SUBMIT_DIR/standard-fine-tuning/standard_finetune.py" ]]; then
+elif [[ -f "$SUBMIT_DIR/standard-fine-tuning/standard-finetune.py" ]]; then
     SCRIPT_DIR="$SUBMIT_DIR/standard-fine-tuning"
 else
-    echo "Cannot find standard_finetune.py; submit from the standard-fine-tuning/ directory." >&2
+    echo "Cannot find standard-finetune.py; submit from the standard-fine-tuning/ directory." >&2
     exit 1
 fi
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
@@ -53,7 +53,7 @@ nvidia-smi || true
 python -c "import torch; print('torch', torch.__version__, 'cuda', torch.version.cuda, 'available', torch.cuda.is_available())"
 
 case "$MODE" in
-    train) python standard_finetune.py "$@" ;;
-    eval)  python standard_eval.py "$@" ;;
+    train) python standard-finetune.py "$@" ;;
+    eval)  python standard-eval.py "$@" ;;
     *)     echo "Unknown mode '$MODE' (use 'train' or 'eval')" >&2; exit 1 ;;
 esac

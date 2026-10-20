@@ -9,8 +9,8 @@ M2Scorer is Python 2 only: it is cloned into output/tools/, and a Python 2.7
 interpreter is created there with micromamba if `python2` is not on PATH.
 
 Usage:
-    python standard_eval.py
-    python standard_eval.py --limit 20     # smoke test on the first 20 sentences
+    python standard-eval.py
+    python standard-eval.py --limit 20     # smoke test on the first 20 sentences
 """
 
 import argparse
