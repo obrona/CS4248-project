@@ -1,3 +1,7 @@
 data/raw/
 data/processed/
 __pycache__/
+.venv/
+.env
+standard-fine-tuning/output/*
+!standard-fine-tuning/output/.gitkeep
