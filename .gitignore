@@ -3,5 +3,5 @@ data/processed/
 __pycache__/
 .venv/
 .env
-standard-fine-tuning/output/*
-!standard-fine-tuning/output/.gitkeep
+standard-finetuning/output/*
+!standard-finetuning/output/.gitkeep

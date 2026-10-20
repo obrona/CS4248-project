@@ -35,13 +35,13 @@ read -r -p 'Choose 1 or 2: ' direction
 case "$direction" in
 	1 | push | PUSH)
 		direction=push
-		read -r -p 'Local source file or folder: ' source_folder
-		read -r -p 'Remote destination folder: ' destination_folder
+		source_side=Local
+		destination_side=Remote
 		;;
 	2 | pull | PULL)
 		direction=pull
-		read -r -p 'Remote source file or folder: ' source_folder
-		read -r -p 'Local destination folder: ' destination_folder
+		source_side=Remote
+		destination_side=Local
 		;;
 	*)
 		printf 'Error: choose 1 (push) or 2 (pull).\n' >&2
@@ -49,22 +49,36 @@ case "$direction" in
 		;;
 esac
 
-if [[ -z $source_folder || -z $destination_folder ]]; then
+# Read one source path per line so paths containing spaces work. An empty
+# line ends the list.
+sources=()
+printf '%s source files or folders (one per line, empty line to finish):\n' \
+	"$source_side"
+while IFS= read -r -p '  > ' source_path; do
+	[[ -z $source_path ]] && break
+	# A trailing slash means "copy the contents" to rsync. Remove it so this
+	# script consistently copies the source folder itself. This has no effect
+	# on ordinary file paths.
+	if [[ $source_path != / ]]; then
+		source_path=${source_path%/}
+	fi
+	sources+=("$source_path")
+done
+read -r -p "$destination_side destination folder: " destination_folder
+
+if [[ ${#sources[@]} -eq 0 || -z $destination_folder ]]; then
 	printf 'Error: source and destination paths cannot be empty.\n' >&2
 	exit 1
 fi
 
-# A trailing slash means "copy the contents" to rsync. Remove it so this
-# script consistently copies the source folder itself. This has no effect on
-# ordinary file paths.
-if [[ $source_folder != / ]]; then
-	source_folder=${source_folder%/}
-fi
-
-if [[ $direction == push && ! -f $source_folder && ! -d $source_folder ]]; then
-	printf 'Error: local source is not a regular file or directory: %s\n' \
-		"$source_folder" >&2
-	exit 1
+if [[ $direction == push ]]; then
+	for source_path in "${sources[@]}"; do
+		if [[ ! -f $source_path && ! -d $source_path ]]; then
+			printf 'Error: local source is not a regular file or directory: %s\n' \
+				"$source_path" >&2
+			exit 1
+		fi
+	done
 fi
 
 if [[ $direction == pull ]]; then
@@ -93,17 +107,17 @@ trap cleanup EXIT
 ssh_command="ssh -J $JUMP_HOST"
 
 if [[ $direction == push ]]; then
-	printf 'Pushing "%s" to %s:"%s" ...\n' \
-		"$source_folder" "$REMOTE_HOST" "$destination_folder"
+	printf 'Pushing to %s:"%s":\n' "$REMOTE_HOST" "$destination_folder"
+	printf '  "%s"\n' "${sources[@]}"
 	rsync --archive --human-readable --info=progress2 --protect-args \
 		--rsh="$ssh_command" -- \
-		"$source_folder" "$REMOTE_HOST:$destination_folder/"
+		"${sources[@]}" "$REMOTE_HOST:$destination_folder/"
 else
-	printf 'Pulling %s:"%s" to "%s" ...\n' \
-		"$REMOTE_HOST" "$source_folder" "$destination_folder"
+	printf 'Pulling from %s to "%s":\n' "$REMOTE_HOST" "$destination_folder"
+	printf '  "%s"\n' "${sources[@]}"
 	rsync --archive --human-readable --info=progress2 --protect-args \
 		--rsh="$ssh_command" -- \
-		"$REMOTE_HOST:$source_folder" "$destination_folder/"
+		"${sources[@]/#/$REMOTE_HOST:}" "$destination_folder/"
 fi
 
 printf 'Transfer complete.\n'

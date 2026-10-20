@@ -1,15 +1,15 @@
 #!/bin/bash
 # Slurm job for standard fine-tuning of facebook/bart-base (and CoNLL-14 eval).
 #
-# Submit from the standard-fine-tuning/ directory:
-#   cd standard-fine-tuning
+# Submit from the standard-finetuning/ directory:
+#   cd standard-finetuning
 #   sbatch run.sh            # fine-tune (1 epoch, all training data)
 #   sbatch run.sh eval       # evaluate on CoNLL-2014 with M2Scorer
 # Extra arguments are passed to the Python script, e.g.
 #   sbatch run.sh train --batch_size 16
 #
 #SBATCH --job-name=bart-gec
-#SBATCH --gpus=a100-40:1          # alternatives: a100-80:1, h100-96:1, h100-47:1, titanrtx:1
+#SBATCH --gpus=h100-47:1          # alternatives: a100-80:1, h100-96:1, h100-47:1, titanrtx:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=12:00:00
@@ -22,10 +22,10 @@ set -euo pipefail
 SUBMIT_DIR="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 if [[ -f "$SUBMIT_DIR/standard-finetune.py" ]]; then
     SCRIPT_DIR="$SUBMIT_DIR"
-elif [[ -f "$SUBMIT_DIR/standard-fine-tuning/standard-finetune.py" ]]; then
-    SCRIPT_DIR="$SUBMIT_DIR/standard-fine-tuning"
+elif [[ -f "$SUBMIT_DIR/standard-finetuning/standard-finetune.py" ]]; then
+    SCRIPT_DIR="$SUBMIT_DIR/standard-finetuning"
 else
-    echo "Cannot find standard-finetune.py; submit from the standard-fine-tuning/ directory." >&2
+    echo "Cannot find standard-finetune.py; submit from the standard-finetuning/ directory." >&2
     exit 1
 fi
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
