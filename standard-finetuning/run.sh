@@ -4,6 +4,7 @@
 # Submit from the standard-finetuning/ directory:
 #   cd standard-finetuning
 #   sbatch run.sh            # fine-tune (1 epoch, all training data)
+#   sbatch run.sh train2     # stage 2: continue on the clean data only -> output/stage2/
 #   sbatch run.sh eval       # evaluate on CoNLL-2014 with M2Scorer
 #   sbatch run.sh bea        # correct the BEA-2019 test set for Codabench upload
 # Extra arguments are passed to the Python script, e.g.
@@ -54,8 +55,9 @@ nvidia-smi || true
 python -c "import torch; print('torch', torch.__version__, 'cuda', torch.version.cuda, 'available', torch.cuda.is_available())"
 
 case "$MODE" in
-    train) python finetune.py "$@" ;;
-    eval)  python eval-conll14st.py "$@" ;;
-    bea)   python eval-bea-2019.py "$@" ;;
-    *)     echo "Unknown mode '$MODE' (use 'train', 'eval' or 'bea')" >&2; exit 1 ;;
+    train)  python finetune.py "$@" ;;
+    train2) python finetune-2.py "$@" ;;
+    eval)   python eval-conll14st.py "$@" ;;
+    bea)    python eval-bea-2019.py "$@" ;;
+    *)      echo "Unknown mode '$MODE' (use 'train', 'train2', 'eval' or 'bea')" >&2; exit 1 ;;
 esac

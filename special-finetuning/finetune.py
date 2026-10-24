@@ -68,7 +68,7 @@ TRAIN_FILES = [
 ]
 
 
-def parse_args():
+def build_parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--model_name", default=MODEL_NAME)
     p.add_argument("--output_dir", type=Path, default=None,
@@ -93,7 +93,11 @@ def parse_args():
     # Debug / smoke-test options
     p.add_argument("--max_train_samples", type=int, default=None)
     p.add_argument("--max_steps", type=int, default=-1)
-    args = p.parse_args()
+    return p
+
+
+def parse_args():
+    args = build_parser().parse_args()
     if args.output_dir is None:
         args.output_dir = OUTPUT_DIR / f"a{args.alpha:g}_b{args.beta:g}_w{args.w_max:g}"
     return args
@@ -173,11 +177,11 @@ def apply_edits(src_words, edits):
     return tgt, cats, pending or None
 
 
-def load_training_data(m2_dir):
+def load_training_data(m2_dir, train_files=TRAIN_FILES):
     """Rebuild the baseline's training pairs from M2 with per-word categories."""
     sources, word_cats, targets, sizes, mismatches = [], [], [], {}, {}
     eos_cats = []
-    for stem, subdir, drop_unchanged in TRAIN_FILES:
+    for stem, subdir, drop_unchanged in train_files:
         base_src = read_lines(REPO_ROOT / subdir / f"{stem}.src")
         base_tgt = read_lines(REPO_ROOT / subdir / f"{stem}.tgt")
         rows = []
@@ -270,8 +274,8 @@ class WeightedLossTrainer(Seq2SeqTrainer):
         return (loss, outputs) if return_outputs else loss
 
 
-def main():
-    args = parse_args()
+def main(args=None, train_files=TRAIN_FILES):
+    args = args or parse_args()
     out_dir = args.output_dir
     model_dir = out_dir / "bart-base-gec"
     ckpt_dir = out_dir / "checkpoints"
@@ -279,7 +283,7 @@ def main():
 
     transformers.set_seed(args.seed)
 
-    sources, targets, word_cats, eos_cats, sizes, mismatches = load_training_data(args.m2_dir)
+    sources, targets, word_cats, eos_cats, sizes, mismatches = load_training_data(args.m2_dir, train_files)
     cat_weights, cat_counts = category_weights(word_cats, eos_cats, args.alpha, args.beta, args.w_max)
     print("Category weights (edited target positions, weight):")
     for c, n in cat_counts.most_common():

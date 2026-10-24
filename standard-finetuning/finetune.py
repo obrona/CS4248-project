@@ -48,7 +48,7 @@ TRAIN_FILES = [
 ]
 
 
-def parse_args():
+def build_parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--model_name", default=MODEL_NAME)
     p.add_argument("--output_dir", type=Path, default=OUTPUT_DIR)
@@ -67,7 +67,11 @@ def parse_args():
     # Debug / smoke-test options
     p.add_argument("--max_train_samples", type=int, default=None)
     p.add_argument("--max_steps", type=int, default=-1)
-    return p.parse_args()
+    return p
+
+
+def parse_args():
+    return build_parser().parse_args()
 
 
 def read_lines(path):
@@ -75,9 +79,9 @@ def read_lines(path):
         return [line.rstrip("\n") for line in f]
 
 
-def load_training_data():
+def load_training_data(train_files=TRAIN_FILES):
     sources, targets, sizes = [], [], {}
-    for subdir, stem in TRAIN_FILES:
+    for subdir, stem in train_files:
         src = read_lines(REPO_ROOT / subdir / f"{stem}.src")
         tgt = read_lines(REPO_ROOT / subdir / f"{stem}.tgt")
         assert len(src) == len(tgt), f"{stem}: {len(src)} src vs {len(tgt)} tgt lines"
@@ -89,8 +93,8 @@ def load_training_data():
     return sources, targets, sizes
 
 
-def main():
-    args = parse_args()
+def main(args=None, train_files=TRAIN_FILES):
+    args = args or parse_args()
     out_dir = args.output_dir
     model_dir = out_dir / "bart-base-gec"
     ckpt_dir = out_dir / "checkpoints"
@@ -98,7 +102,7 @@ def main():
 
     transformers.set_seed(args.seed)
 
-    sources, targets, sizes = load_training_data()
+    sources, targets, sizes = load_training_data(train_files)
     dataset = Dataset.from_dict({"src": sources, "tgt": targets})
     if args.max_train_samples is not None:
         dataset = dataset.shuffle(seed=args.seed).select(range(args.max_train_samples))
