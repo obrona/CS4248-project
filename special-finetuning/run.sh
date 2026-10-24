@@ -1,10 +1,11 @@
 #!/bin/bash
-# Slurm job for category-weighted fine-tuning of facebook/bart-base (and CoNLL-14 eval).
+# Slurm job for category-weighted fine-tuning of facebook/bart-base (and CoNLL-14 / BEA-2019 eval).
 #
 # Submit from the special-finetuning/ directory:
 #   cd special-finetuning
 #   sbatch run.sh            # fine-tune with alpha=3 beta=0.5 w_max=10 -> output/a3_b0.5_w10/
 #   sbatch run.sh eval       # evaluate output/a3_b0.5_w10 on CoNLL-2014 with M2Scorer
+#   sbatch run.sh bea        # correct the BEA-2019 test set with output/a3_b0.5_w10 for Codabench
 #   sbatch run.sh eval --run_dir output/a2_b1_w10   # evaluate another run
 # Extra arguments are passed to the Python script, e.g.
 #   sbatch run.sh train --alpha 2 --beta 1
@@ -62,5 +63,6 @@ python -c "import torch; print('torch', torch.__version__, 'cuda', torch.version
 case "$MODE" in
     train) python finetune.py "$@" ;;
     eval)  python eval-conll14st.py "$@" ;;
-    *)     echo "Unknown mode '$MODE' (use 'train' or 'eval')" >&2; exit 1 ;;
+    bea)   python eval-bea-2019.py "$@" ;;
+    *)     echo "Unknown mode '$MODE' (use 'train', 'eval' or 'bea')" >&2; exit 1 ;;
 esac
