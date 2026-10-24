@@ -1,8 +1,8 @@
 # Matching target tokens to error categories
 
-This note explains how `special-finetune.py` decides which ERRANT error category
+This note explains how `finetune.py` decides which ERRANT error category
 (and therefore which loss weight) each target token belongs to. Line numbers refer to
-`special-finetune.py`.
+`finetune.py`.
 
 ## TL;DR
 
@@ -55,7 +55,7 @@ the next decoder input is still the gold token.
 A model that wants a longer output puts low probability on `</s>` at the final
 position. A model that wants to insert an extra word puts probability on a non-gold
 token at some position. Both are penalised at a known gold position, so the weight is
-known too. At inference (`special-eval.py`) outputs can be any length, but no weights
+known too. At inference (`eval-conll14st.py`) outputs can be any length, but no weights
 are used there: M2Scorer counts extra edits as false positives.
 
 ## 2. Gold target words → categories (`read_m2`, `apply_edits`)

@@ -1,6 +1,6 @@
 """Category-aware weighted fine-tuning of facebook/bart-base for grammatical error correction.
 
-Same data, model and hyperparameters as standard-finetuning/standard-finetune.py, but
+Same data, model and hyperparameters as standard-finetuning/finetune.py, but
 the token-level cross-entropy is weighted: target tokens produced by a correction get
 a weight that depends on the correction's ERRANT error category (rarer categories get
 larger weights), copied tokens keep weight 1.
@@ -20,9 +20,9 @@ target word knows which edit produced it; they are checked against the *-src-tgt
 used by the baseline. No evaluation is run here -- see run.sh eval.
 
 Usage:
-    python special-finetune.py                                  # alpha=3, beta=0.5
-    python special-finetune.py --alpha 2 --beta 1 --w_max 5
-    python special-finetune.py --max_train_samples 64 --max_steps 2   # smoke test
+    python finetune.py                                  # alpha=3, beta=0.5
+    python finetune.py --alpha 2 --beta 1 --w_max 5
+    python finetune.py --max_train_samples 64 --max_steps 2   # smoke test
 """
 
 import argparse

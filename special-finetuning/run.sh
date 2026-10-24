@@ -21,12 +21,12 @@ set -euo pipefail
 
 # Slurm runs a copy of this script, so locate the project from the submit directory.
 SUBMIT_DIR="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
-if [[ -f "$SUBMIT_DIR/special-finetune.py" ]]; then
+if [[ -f "$SUBMIT_DIR/finetune.py" ]]; then
     SCRIPT_DIR="$SUBMIT_DIR"
-elif [[ -f "$SUBMIT_DIR/special-finetuning/special-finetune.py" ]]; then
+elif [[ -f "$SUBMIT_DIR/special-finetuning/finetune.py" ]]; then
     SCRIPT_DIR="$SUBMIT_DIR/special-finetuning"
 else
-    echo "Cannot find special-finetune.py; submit from the special-finetuning/ directory." >&2
+    echo "Cannot find finetune.py; submit from the special-finetuning/ directory." >&2
     exit 1
 fi
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
@@ -60,7 +60,7 @@ nvidia-smi || true
 python -c "import torch; print('torch', torch.__version__, 'cuda', torch.version.cuda, 'available', torch.cuda.is_available())"
 
 case "$MODE" in
-    train) python special-finetune.py "$@" ;;
-    eval)  python special-eval.py "$@" ;;
+    train) python finetune.py "$@" ;;
+    eval)  python eval-conll14st.py "$@" ;;
     *)     echo "Unknown mode '$MODE' (use 'train' or 'eval')" >&2; exit 1 ;;
 esac

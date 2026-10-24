@@ -1,18 +1,16 @@
-"""Evaluate a category-weighted BART model on the CoNLL-2014 shared task test set.
+"""Evaluate the fine-tuned BART model on the CoNLL-2014 shared task test set.
 
-Same evaluation as standard-finetuning/standard-eval.py: generates corrections for
-every sentence of conll14st-test-data/noalt/official-2014.combined.m2 and scores
-them with the official M2Scorer (P / R / F0.5). A run of special-finetune.py lives
-in output/a{alpha}_b{beta}_w{w_max}/; everything needed for later analysis is
-written to <run_dir>/eval_conll14/.
+Generates corrections for every sentence of
+conll14st-test-data/noalt/official-2014.combined.m2 and scores them with the
+official M2Scorer (P / R / F0.5). Everything needed for later analysis is
+written to output/eval_conll14/.
 
 M2Scorer is Python 2 only: it is cloned into output/tools/, and a Python 2.7
 interpreter is created there with micromamba if `python2` is not on PATH.
 
 Usage:
-    python special-eval.py                               # output/a3_b0.5_w10 (default run)
-    python special-eval.py --run_dir output/a2_b1_w10
-    python special-eval.py --limit 20                    # smoke test on the first 20 sentences
+    python eval-conll14st.py
+    python eval-conll14st.py --limit 20     # smoke test on the first 20 sentences
 """
 
 import argparse
@@ -41,18 +39,13 @@ MICROMAMBA_URL = "https://micro.mamba.pm/api/micromamba/linux-64/latest"
 
 def parse_args():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--run_dir", type=Path, default=OUTPUT_DIR / "a3_b0.5_w10",
-                   help="output folder of a special-finetune.py run")
-    p.add_argument("--model_dir", type=Path, default=None, help="default: <run_dir>/bart-base-gec")
-    p.add_argument("--eval_dir", type=Path, default=None, help="default: <run_dir>/eval_conll14")
+    p.add_argument("--model_dir", type=Path, default=OUTPUT_DIR / "bart-base-gec")
+    p.add_argument("--eval_dir", type=Path, default=OUTPUT_DIR / "eval_conll14")
     p.add_argument("--batch_size", type=int, default=32)
     p.add_argument("--num_beams", type=int, default=5)
     p.add_argument("--max_len", type=int, default=256)
     p.add_argument("--limit", type=int, default=None, help="only evaluate the first N sentences")
-    args = p.parse_args()
-    args.model_dir = args.model_dir or args.run_dir / "bart-base-gec"
-    args.eval_dir = args.eval_dir or args.run_dir / "eval_conll14"
-    return args
+    return p.parse_args()
 
 
 def read_m2(path):
