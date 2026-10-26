@@ -27,12 +27,12 @@ M2 edits ──apply_edits──▶ category per target WORD ──category_weig
 
 The loss is
 
-```
-L = Σ_t w_t · CE(p_t, y_t) / Σ_t w_t
-```
+$$
+L = \frac{\sum_t w_t \cdot \mathrm{CE}(p_t, y_t)}{\sum_t w_t}
+$$
 
-where `y_t` is the gold token at position `t` and `p_t` is the model's predicted
-distribution there. The weight `w_t` depends only on the gold position. Suppose the
+where $y_t$ is the gold token at position $t$ and $p_t$ is the model's predicted
+distribution there. The weight $w_t$ depends only on the gold position. Suppose the
 gold word is `saw` (a `VERB:TENSE` correction) and the model prefers `sees`. The loss
 `−log p(saw)` is scaled by the `VERB:TENSE` weight, and we never ask what kind of
 error `sees` is.
@@ -107,19 +107,122 @@ match exactly (assert). If a rebuilt target differs (line 194), the baseline tar
 used and **all its weights are set to 1**, because the categories can't be placed
 reliably. These counts are saved as `target_mismatches` in `train_config.json`.
 
-## 3. Categories → weights (`category_weights`, line 211)
+## 3. Categories → weights (`category_weights`, line 215)
 
-`n_c` is the number of edited target positions of category `c`, counting both word
-positions and EOS positions. Then:
+$n_c$ is the number of times category $c$ appears as an edit in the **whole training
+set**. It is counted once, before training, from the categories that `apply_edits`
+attached to the gold targets (§2):
 
-```
-r_c = n_c^(−β)                                  # rarer → larger
-w_c = min(1 + (α − 1) · r_c / Σ_c' p_c' r_c',  w_max),   p_c = n_c / Σ n
-```
+- **Each target word produced by an edit of type $c$ adds 1.** For example, `because` →
+  `because of` (`PREP`) adds 2 to $n_{\text{PREP}}$, one for each word.
+- **Each deletion adds 1, on the word that follows it.** For example, in
+  `I like the music` → `I like music`, `music` adds 1 to $n_{\text{DET}}$.
+- **A deletion at the end of a sentence adds 1, on `</s>`** (see §5).
+- **A word with several categories adds 1 to each of them.**
+- **Copied words add nothing.** They have no category and always get weight 1.
 
-Before the cap, the average weight of an edited token is `α`. With `β = 0` every edit
-gets `α`, and with `α = 1` you get the standard loss back. Copied tokens always have
-weight 1.
+So $n_c$ counts edited target **words** (plus EOS positions) for category $c$. It does
+not count BPE tokens or unchanged words. The real counts are printed at startup and
+saved as `category_weights.<category>.count` in `train_config.json`.
+
+Then:
+
+$$
+r_c = n_c^{-\beta}, \qquad
+p_c = \frac{n_c}{\sum_{c'} n_{c'}}, \qquad
+Z = \sum_{c'} p_{c'}\, r_{c'}
+$$
+
+$$
+w_c = \min\left(1 + (\alpha - 1)\,\frac{r_c}{Z},\; w_{\max}\right)
+$$
+
+Before the cap, the average weight of an edited token is $\alpha$. With $\beta = 0$
+every edit gets $\alpha$, and with $\alpha = 1$ you get the standard loss back. Copied
+tokens always have weight 1.
+
+Defaults: $\alpha = 3$, $\beta = 0.5$, $w_{\max} = 10$ (`--alpha`, `--beta`, `--w_max`).
+
+### 3.1 What each piece does
+
+The formula has three parts: a raw rarity score, a normalisation, and a cap.
+
+1. **Rarity score $r_c = n_c^{-\beta}$.** Rare categories get a larger score. $\beta$
+   sets how strongly rarity counts:
+   - $\beta = 0$: $r_c = 1$ for every category, so frequency is ignored.
+   - $\beta = 1$: plain inverse frequency, so a category 100× rarer gets a 100× larger
+     score.
+   - $\beta = 0.5$ (default): inverse square root, so a category 100× rarer gets only a
+     10× larger score. This keeps very rare categories from getting huge weights.
+
+2. **Normalisation by $Z$.** $p_c$ is the share of edited positions that belong to $c$,
+   so $Z$ is the average rarity score over all edited positions. $r_c / Z$ is then a
+   relative score whose average over edited positions is exactly 1:
+
+   $$
+   \sum_c p_c \cdot \frac{r_c}{Z} = \frac{Z}{Z} = 1
+   $$
+
+   Categories rarer than average get $r_c / Z > 1$, common ones get $r_c / Z < 1$.
+   Without this step the size of the weights would depend on the raw counts (and so on
+   dataset size) rather than on $\alpha$.
+
+3. **Map to a weight: $1 + (\alpha - 1)\, r_c / Z$.** The $1$ is the baseline weight
+   every token already has. $(\alpha - 1)$ is the extra weight given to edits on
+   average, and $r_c / Z$ shares that extra weight out between categories by rarity.
+   Because $r_c / Z$ averages to 1, the average weight over edited positions is
+
+   $$
+   \sum_c p_c \left(1 + (\alpha - 1)\,\frac{r_c}{Z}\right) = 1 + (\alpha - 1) \cdot 1 = \alpha
+   $$
+
+   So $\alpha$ sets **how much** edited tokens are up-weighted overall, and $\beta$ sets
+   **how that boost is split** between categories. The two can be tuned independently.
+
+4. **Cap $\min(\cdot,\, w_{\max})$.** Very rare categories (a handful of occurrences)
+   could still end up with very large weights and dominate the gradient of the batches
+   they appear in. The cap limits any single category to $w_{\max}$. Capping only lowers
+   weights and is not renormalised afterwards, so with the cap active the average edited
+   weight is slightly below $\alpha$.
+
+A useful consequence: for any two categories $c$ and $d$ (below the cap),
+
+$$
+\frac{w_c - 1}{w_d - 1} = \frac{r_c}{r_d} = \left(\frac{n_d}{n_c}\right)^{\beta}
+$$
+
+The **extra** weight above 1 scales with relative rarity to the power $\beta$,
+regardless of $\alpha$.
+
+### 3.2 Worked example
+
+Illustrative counts (not the real ones; the real counts are printed at startup and
+saved in `train_config.json`), with $\alpha = 3$, $\beta = 0.5$:
+
+| Category     | $n_c$ | $p_c$  | $r_c = n_c^{-0.5}$ | $r_c / Z$ | $w_c = 1 + 2\, r_c / Z$ |
+|--------------|-------|--------|--------------------|-----------|-------------------------|
+| `PUNCT`      | 400   | 0.762  | 0.050              | 0.75      | 2.5                     |
+| `DET`        | 100   | 0.190  | 0.100              | 1.50      | 4.0                     |
+| `VERB:TENSE` | 25    | 0.048  | 0.200              | 3.00      | 7.0                     |
+
+$$
+Z = 0.762 \cdot 0.05 + 0.190 \cdot 0.1 + 0.048 \cdot 0.2 \approx 0.0667
+$$
+
+Checks:
+
+- Average edited weight: $0.762 \cdot 2.5 + 0.190 \cdot 4.0 + 0.048 \cdot 7.0 \approx 3.0 = \alpha$.
+- `VERB:TENSE` is 16× rarer than `PUNCT`, so its extra weight is $16^{0.5} = 4$ times
+  larger: $(7 - 1) / (2.5 - 1) = 4$.
+- All weights are below $w_{\max} = 10$, so the cap does nothing here.
+
+### 3.3 Details
+
+- Counts are per target **word** (and per EOS), not per BPE token. A word split into 3
+  subwords counts once in $n_c$ but gets the weight on all 3 tokens (§4.3), so "average
+  over edited tokens" is exact at the word level and approximate at the token level.
+- If $\alpha > 1$ every edit weight is above 1, so edited tokens always count more than
+  copied ones. $\alpha < 1$ would down-weight edits, which is not what we want.
 
 ## 4. Words → BPE tokens (`tokenize` inside `main`, line 301)
 
