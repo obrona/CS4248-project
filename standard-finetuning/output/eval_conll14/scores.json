@@ -1,0 +1,16 @@
+{
+  "test_set": "conll14st-test-data/noalt/official-2014.combined.m2",
+  "num_sentences": 1312,
+  "num_changed": 481,
+  "m2scorer": {
+    "precision": 0.7392,
+    "recall": 0.2493,
+    "f0.5": 0.5307
+  },
+  "model_dir": "/home/t/theodore/cs4248-project/standard-finetuning/output/bart-base-gec",
+  "generation": {
+    "num_beams": 5,
+    "max_len": 256,
+    "batch_size": 32
+  }
+}

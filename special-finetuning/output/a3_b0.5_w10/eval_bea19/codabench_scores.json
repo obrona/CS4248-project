@@ -1,0 +1,8 @@
+{
+  "test_set": "bea-2019-test-data/ABCN.test.bea19.orig",
+  "submission": "submission.zip",
+  "scorer": "Codabench BEA-2019 (ERRANT), https://www.codabench.org/competitions/10960/",
+  "span_level_correction": {"tp": 2771, "fp": 1411, "fn": 2465, "precision": 0.6626, "recall": 0.5292, "f0.5": 0.6308},
+  "span_level_detection":  {"tp": 3202, "fp": 989,  "fn": 2244, "precision": 0.7640, "recall": 0.5880, "f0.5": 0.7208},
+  "token_level_detection": {"tp": 4007, "fp": 729,  "fn": 2557, "precision": 0.8461, "recall": 0.6105, "f0.5": 0.7854}
+}

@@ -3,7 +3,13 @@ data/processed/
 __pycache__/
 .venv/
 .env
-standard-finetuning/output/*
+# standard-finetuning/output: keep only eval results (eval_*/ at any depth)
+standard-finetuning/output/**
+!standard-finetuning/output/**/
 !standard-finetuning/output/.gitkeep
-special-finetuning/output/*
+!standard-finetuning/output/**/eval_*/**
+# special-finetuning/output: keep only eval results (eval_*/ at any depth)
+special-finetuning/output/**
+!special-finetuning/output/**/
 !special-finetuning/output/.gitkeep
+!special-finetuning/output/**/eval_*/**

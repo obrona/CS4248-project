@@ -1,0 +1,11 @@
+{
+  "test_set": "bea-2019-test-data/ABCN.test.bea19.orig",
+  "num_sentences": 4477,
+  "num_changed": 1024,
+  "model_dir": "/home/t/theodore/cs4248-project/standard-finetuning/output/bart-base-gec",
+  "generation": {
+    "num_beams": 5,
+    "max_len": 256,
+    "batch_size": 32
+  }
+}
