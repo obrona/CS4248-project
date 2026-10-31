@@ -1,0 +1,15 @@
+{
+  "dataset": "BEA-2019 test",
+  "phase": "Open phase",
+  "submission_id": 1023976,
+  "url": "https://www.codabench.org/competitions/10960/detailed_results/1023976/",
+  "metric": "span-level correction",
+  "score_units": "percent",
+  "precision": 79.15,
+  "recall": 29.01,
+  "f0.5": 58.81,
+  "tp": 1211,
+  "fp": 319,
+  "fn": 2964,
+  "source": "Codabench screenshot"
+}

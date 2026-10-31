@@ -1,0 +1,11 @@
+{
+  "test_set": "bea-2019-test-data/ABCN.test.bea19.orig",
+  "num_sentences": 4477,
+  "num_changed": 1040,
+  "model_dir": "output/a1_b0.5_w10/bart-base-gec",
+  "generation": {
+    "num_beams": 5,
+    "max_len": 256,
+    "batch_size": 16
+  }
+}
