@@ -1,0 +1,13 @@
+Loaded 4477 BEA-2019 test sentences from /home/e/e1129955/CS4248-tl2-alpha1/bea-2019-test-data/ABCN.test.bea19.orig
+{
+  "test_set": "bea-2019-test-data/ABCN.test.bea19.orig",
+  "num_sentences": 4477,
+  "num_changed": 2130,
+  "model_dir": "output/a1_b0.5_w10/stage2/bart-base-gec",
+  "generation": {
+    "num_beams": 5,
+    "max_len": 256,
+    "batch_size": 16
+  }
+}
+Upload output/a1_b0.5_w10/stage2/eval_bea19/submission.zip to https://www.codabench.org/competitions/10960/

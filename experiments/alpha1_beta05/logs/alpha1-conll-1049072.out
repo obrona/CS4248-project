@@ -1,0 +1,18 @@
+Loaded 1312 CoNLL-2014 test sentences from /home/e/e1129955/CS4248-tl2-alpha1/conll14st-test-data/noalt/official-2014.combined.m2
+Running M2Scorer (/home/e/e1129955/miniforge3/envs/gec_m2_py2_fixed/bin/python2.7 /home/e/e1129955/gec_project/m2scorer_scripts/m2scorer.py)
+{
+  "test_set": "conll14st-test-data/noalt/official-2014.combined.m2",
+  "num_sentences": 1312,
+  "num_changed": 802,
+  "m2scorer": {
+    "precision": 0.7069,
+    "recall": 0.4184,
+    "f0.5": 0.6212
+  },
+  "model_dir": "output/a1_b0.5_w10/stage2/bart-base-gec",
+  "generation": {
+    "num_beams": 5,
+    "max_len": 256,
+    "batch_size": 16
+  }
+}

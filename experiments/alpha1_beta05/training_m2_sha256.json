@@ -1,0 +1,9 @@
+{
+  "A.train.gold.bea19.m2": "a397523ec66e82f5efa4e3e9c6fc564b70737e55c88ec07f2536d67c923623b5",
+  "B.train.gold.bea19.m2": "e53c36425a6cdcadb2424865e286ec888283cfed06bd107b23ca0e58cc4a2a2f",
+  "C.train.gold.bea19.m2": "3bd271d846f836a246d23110458eaaccf0618b660a9081c6b72c4a933aef6f4f",
+  "fce.dev.gold.bea19.m2": "8d43c4badbcc920727a9e7a0e726bd1976cf8b8845e91ec7bfe934129d391f31",
+  "fce.train.gold.bea19.m2": "3648a65712e6c93251a68a5645f37d2379aa123b1833886b61390b5a6c5e6642",
+  "lang8.train.auto.bea19.m2": "9ac027a201ed0810fdb97e95e43f5192b7882b0357dcb409be4c4762cffef6b0",
+  "nucle.train.gold.bea19.m2": "da9c28bfed55df8e63ef3b0e2c8d6566626815c01aaf2535e5e6894f520e0f81"
+}

@@ -1,0 +1,64 @@
+{
+  "args": {
+    "model_name": "facebook/bart-base",
+    "output_dir": "/home/e/e1129955/CS4248-tl2-alpha1/special-finetuning/output/a1_b0.5_w10",
+    "m2_dir": "/home/e/e1129955/CS4248-tl2-alpha1/data/raw",
+    "alpha": 1.0,
+    "beta": 0.5,
+    "w_max": 10.0,
+    "max_len": 256,
+    "batch_size": 32,
+    "grad_accum": 2,
+    "lr": 5e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.01,
+    "epochs": 1.0,
+    "save_steps": 2000,
+    "logging_steps": 100,
+    "seed": 42,
+    "dataloader_workers": 0,
+    "num_proc": 8,
+    "max_train_samples": null,
+    "max_steps": -1
+  },
+  "dataset_sizes": {
+    "fce.train.gold.bea19": 17715,
+    "fce.dev.gold.bea19": 1370,
+    "lang8.train.auto.bea19": 1037561,
+    "nucle.train.gold.bea19": 21353,
+    "A.train.gold.bea19": 10493,
+    "B.train.gold.bea19": 13032,
+    "C.train.gold.bea19": 10783
+  },
+  "target_mismatches": {
+    "fce.train.gold.bea19": 0,
+    "fce.dev.gold.bea19": 0,
+    "lang8.train.auto.bea19": 0,
+    "nucle.train.gold.bea19": 0,
+    "A.train.gold.bea19": 0,
+    "B.train.gold.bea19": 0,
+    "C.train.gold.bea19": 0
+  },
+  "num_train_examples": 1112307,
+  "category_weights": {
+    "OTHER": {
+      "count": 1658468,
+      "weight": 1.0
+    }
+  },
+  "train_metrics": {
+    "train_runtime": 1863.7494,
+    "train_samples_per_second": 596.811,
+    "train_steps_per_second": 9.325,
+    "total_flos": 1.032616856613888e+16,
+    "train_loss": 0.3940787013572983,
+    "epoch": 1.0
+  },
+  "precision": "bf16",
+  "gpu": "NVIDIA H100 NVL",
+  "versions": {
+    "python": "3.11.17",
+    "torch": "2.7.1+cu126",
+    "transformers": "4.57.1"
+  }
+}
