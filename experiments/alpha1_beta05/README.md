@@ -28,12 +28,12 @@ as grammatical-category annotations for category-weighted experiments.
 |---|---:|---:|---:|
 | W&I+LOCNESS dev / ERRANT | 57.21% | 33.80% | 50.25% |
 | CoNLL-2014 / official M2Scorer | 70.69% | 41.84% | 62.12% |
-| BEA-2019 test / Codabench | Pending | Pending | Pending |
+| BEA-2019 test / Codabench | 72.92% | 54.94% | 68.44% |
 
 Dev: 4,384 sentences; TP=2522, FP=1886, FN=4939.
 CoNLL-2014: 1,312 sentences.
 BEA-2019: predictions generated for 4,477 sentences.
-The Codabench score has not yet been recorded in this report.
+Codabench Open-phase submission 1023350: span-level correction P=72.92%, R=54.94%, F0.5=68.44%.
 
 Generation: 5 beams, input limit 256 tokens, max_new_tokens=256,
 early_stopping=True, no_repeat_ngram_size=0, batch size 16.
