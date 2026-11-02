@@ -1,0 +1,12 @@
+{
+  "reports": {
+    "standard": "/home/e/e1337195/CS4248-project/analysis/errant/conll14/standard_normalised_categories.txt",
+    "uniform": "/home/e/e1337195/CS4248-project/analysis/errant/conll14/uniform_normalised_categories.txt",
+    "frequency": "/home/e/e1337195/CS4248-project/analysis/errant/conll14/frequency_normalised_categories.txt"
+  },
+  "evaluation": "ERRANT -cs -cat 3; category labels preserved verbatim",
+  "missing_category": "empty CSV cells with present=0; not zero",
+  "selected_reference_support": "TP+FN, depends on model-specific reference selection",
+  "taxonomy_warning": "CoNLL legacy gold labels and ERRANT hypothesis labels are mixed; category precision/recall may be misleading.",
+  "empty_class_warning": "ERRANT defines p=1 if FP=0 and r=1 if FN=0, even when TP=0; refer to raw counts."
+}

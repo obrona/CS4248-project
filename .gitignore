@@ -13,3 +13,11 @@ special-finetuning/output/**
 !special-finetuning/output/**/
 !special-finetuning/output/.gitkeep
 !special-finetuning/output/**/eval_*/**
+
+# ERRANT analysis: locally generated reference data
+/analysis/errant/conll14/gold_errant.m2
+/analysis/errant/conll14/sources.txt
+
+# Python-generated files
+__pycache__/
+*.py[cod]
