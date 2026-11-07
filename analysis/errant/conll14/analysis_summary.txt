@@ -1,0 +1,103 @@
+GEC MODEL COMPARISON — CoNLL-2014
+Uniform vs frequency-weighted BART
+Source: saved ERRANT analysis CSVs; no scores recomputed
+
+==========================================================================================
+1. OVERALL ERRANT RESULTS
+==========================================================================================
+model      tp    fp   fn    precision  recall  f05
+---------  ----  ---  ----  ---------  ------  ------
+standard   545   217  1787  0.7152     0.2337  0.5065
+uniform    1060  622  1551  0.6302     0.406   0.5675
+frequency  1092  684  1550  0.6149     0.4133  0.5602
+
+==========================================================================================
+2. CATEGORY PERFORMANCE (ERRANT F0.5 AND COUNTS)
+==========================================================================================
+Category    Uniform  Frequency  Delta F0.5  U TP/FP/FN  F TP/FP/FN
+----------  -------  ---------  ----------  ----------  ----------
+R:SPELL     0.7102   0.7527     +0.0425     50/12/54    56/11/48
+R:NOUN:NUM  0.7272   0.6970     -0.0302     145/50/72   150/64/70
+R:PUNCT     0.5629   0.6627     +0.0998     17/9/30     22/8/24
+M:PUNCT     0.5018   0.5573     +0.0555     28/14/83    35/14/83
+M:DET       0.6239   0.5812     -0.0427     71/37/66    58/34/73
+Delta = frequency minus uniform. TP/FP/FN are ERRANT edit counts.
+
+==========================================================================================
+3. STATISTICAL TESTING (10,000 RESAMPLES / RANDOMISATIONS)
+==========================================================================================
+
+BOOTSTRAP — original columns preserved (for exact CI interpretation):
+category    delta_f05              ci_lower                ci_upper                bootstrap_valid  bootstrap_total  tail_freq_better  tail_uniform_better  tail_two_sided
+----------  ---------------------  ----------------------  ----------------------  ---------------  ---------------  ----------------  -------------------  --------------
+M:DET       -0.042739257073021286  -0.09485389057474863    0.005737276289170232    10000            10000            0.9573            0.043                0.086
+M:PUNCT     0.055532726068990734   -0.0021476122927199665  0.12499999999999994     10000            10000            0.0296            0.9709               0.0592
+R:NOUN:NUM  -0.03015552232906904   -0.05979199940529951    -0.0004513430436287693  10000            10000            0.9766            0.0234               0.0468
+R:PUNCT     0.09973669512487038    0.003593399354423924    0.21343199445339645     10000            10000            0.0205            0.9823               0.041
+R:SPELL     0.04246089931573804    0.007048609504881495    0.08687262376191678     10000            10000            0.0086            0.9943               0.0172
+
+RANDOMISATION — original columns preserved (including Holm adjustment):
+category    delta_f05              p_randomisation       p_holm  extreme_count  iterations
+----------  ---------------------  --------------------  ------  -------------  ----------
+M:DET       -0.042739257073021286  0.09149085091490851   1.0     914            10000
+M:PUNCT     0.055532726068990734   0.0760923907609239    1.0     760            10000
+R:NOUN:NUM  -0.03015552232906904   0.047595240475952406  1.0     475            10000
+R:PUNCT     0.09973669512487038    0.06329367063293671   1.0     632            10000
+R:SPELL     0.04246089931573804    0.0390960903909609    1.0     390            10000
+
+Interpretation: ordinary per-category bootstrap CIs are not simultaneous 95% intervals; use Holm-adjusted randomisation p-values for multiple-testing claims.
+
+==========================================================================================
+4. SELECTED QUALITATIVE EXAMPLES
+==========================================================================================
+
+Sentence 684 | R:SPELL | Frequency advantage | Same gold ref: True
+SOURCE: However , its disadvantages also can not be ingnored when you cosider it as a platform to show off and
+    a stage for cyber crime .
+UNIFORM: However , its disadvantages also can not be ignored when you cosider it as a platform to show off and
+    a stage for cyber crime .
+FREQUENCY: However , its disadvantages also can not be ignored when you consider it as a platform to show off
+    and a stage for cyber crime .
+Uniform TP/FP/FN: 1/0/1
+Frequency TP/FP/FN: 2/0/0
+Selected gold edits: [{"span": "8 9", "category": "R:SPELL", "correction": "ignored"}, {"span": "11 12", "category": "R:SPELL", "correction": "consider"}]
+
+Sentence 619 | R:SPELL | Uniform advantage | Same gold ref: True
+SOURCE: However , we get less chance and less importance to talk face to face since social media is so
+    convinient , advanced and interesting .
+UNIFORM: However , we get less chances and less importance to talk face to face since social media is so
+    convenient , advanced and interesting .
+FREQUENCY: However , we get less chances and less importance to talk face to face since social media is so
+    convinient , advanced and interesting .
+Uniform TP/FP/FN: 1/0/0
+Frequency TP/FP/FN: 0/0/1
+Selected gold edits: [{"span": "2 5", "category": "R:OTHER", "correction": "the"}, {"span": "5 6", "category": "R:NOUN:NUM", "correction": "chances"}, {"span": "7 8", "category": "U:ADJ", "correction": ""}, {"span": "9 10", "category": "R:PART", "correction": "of"}, {"span": "10 11", "category": "R:VERB:FORM", "correction": "talking"}, {"span": "14 14", "category": "M:OTHER", "correction": "are less"}, {"span": "19 20", "category": "R:SPELL", "correction": "convenient"}]
+
+Sentence 947 | R:NOUN:NUM | Frequency more FP | Same gold ref: True
+SOURCE: There is a situation where a family is having a dinner together in a restaurant but everybody is busy
+    with their own gadget , posting picture in Facebook , updating status on Twitter , or even chatting with
+    friends .
+UNIFORM: There is a situation where a family is having dinner together in a restaurant but everybody is busy
+    with their own gadget , posting pictures on Facebook , updating status on Twitter , or even chatting with
+    friends .
+FREQUENCY: There is a situation where a family is having dinner together in a restaurant but everybody is busy
+    with their own gadgets , posting pictures on Facebook , updating status on Twitter , or even chatting with
+    friends .
+Uniform TP/FP/FN: 1/0/0
+Frequency TP/FP/FN: 1/1/0
+Selected gold edits: [{"span": "9 10", "category": "U:DET", "correction": ""}, {"span": "25 26", "category": "R:NOUN:NUM", "correction": "pictures"}, {"span": "26 27", "category": "R:PREP", "correction": "on"}, {"span": "30 30", "category": "M:DET", "correction": "their"}]
+
+Sentence 233 | R:NOUN:NUM | Uniform advantage | Same gold ref: True
+SOURCE: However , there is still a diversity of point of views among the people .
+UNIFORM: However , there is still a diversity of points of view among people .
+FREQUENCY: However , there is still a diversity of points of views among the people .
+Uniform TP/FP/FN: 2/0/0
+Frequency TP/FP/FN: 1/0/1
+Selected gold edits: [{"span": "8 9", "category": "R:NOUN:NUM", "correction": "points"}, {"span": "10 11", "category": "R:NOUN:NUM", "correction": "view"}, {"span": "12 13", "category": "U:DET", "correction": ""}]
+
+==========================================================================================
+5. REPORTING REMINDERS
+==========================================================================================
+1) Report per-category differences as descriptive unless Holm-adjusted p < 0.05.
+2) Distinguish ERRANT metrics here from official CoNLL M2 scorer metrics.
+3) Sentence IDs in analysed_disagreements.csv are zero-based.

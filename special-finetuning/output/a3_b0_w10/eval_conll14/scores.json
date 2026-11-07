@@ -1,0 +1,16 @@
+{
+  "test_set": "conll14st-test-data/noalt/official-2014.combined.m2",
+  "num_sentences": 1312,
+  "num_changed": 808,
+  "m2scorer": {
+    "precision": 0.6736,
+    "recall": 0.4294,
+    "f0.5": 0.6048
+  },
+  "model_dir": "output/a3_b0_w10/bart-base-gec",
+  "generation": {
+    "num_beams": 5,
+    "max_len": 256,
+    "batch_size": 32
+  }
+}

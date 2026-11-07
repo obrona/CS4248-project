@@ -4,8 +4,8 @@
 Retains raw category names exactly, and distinguishes absent categories
 from zero scores.
 
-CoNLL legacy reference labels and ERRANT hypothesis labels are NOT
-interchangeable; see warnings and the accompanying explanation.
+For the current CoNLL-2014 analysis, gold references and model
+predictions have been annotated using ERRANT-style categories.
 """
 
 import argparse
@@ -206,7 +206,6 @@ def write_csv(path, fields, records):
         writer.writeheader()
         writer.writerows(records)
 
-
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__
@@ -373,10 +372,9 @@ def main():
             'TP+FN, depends on model-specific '
             'reference selection'
         ),
-        'taxonomy_warning': (
-            'CoNLL legacy gold labels and ERRANT '
-            'hypothesis labels are mixed; category '
-            'precision/recall may be misleading.'
+        'taxonomy_note': (
+            'Gold references and model predictions use '
+            'ERRANT-normalised grammatical error categories.'
         ),
         'empty_class_warning': (
             'ERRANT defines p=1 if FP=0 and r=1 '
@@ -397,9 +395,7 @@ def main():
     )
 
     print(
-        'IMPORTANT: CoNLL legacy vs ERRANT modern '
-        'categories are NOT directly comparable. '
-        'See metadata.json.'
+        'Category labels use ERRANT-normalised taxonomy.'
     )
 
     print(

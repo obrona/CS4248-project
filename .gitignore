@@ -21,3 +21,6 @@ special-finetuning/output/**
 # Python-generated files
 __pycache__/
 *.py[cod]
+/special-finetuning/uniform-stage1-a3-b0-w10.tar.gz
+# Local evaluation tools
+/special-finetuning/output/tools/

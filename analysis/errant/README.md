@@ -129,3 +129,49 @@ Remove the `NEW_MODEL` argument if only compiling the three existing models. Add
 3. ERRANT can select different annotator references for different models, so category-level reference support may vary.
 4. The compiled category CSVs are aggregate statistics. For paired bootstrap significance testing, resample the same sentence indices across models and recompute the metric. A dedicated significance-testing script is not yet included.
 5. All new models must use the same source sentences and sentence ordering.
+
+## Per-category significance and qualitative analysis
+
+This analysis compares the uniform and frequency-weighted models on CoNLL-2014 using ERRANT-normalised categories.
+
+### Viewing the results
+
+All results are stored in `analysis/errant/conll14/` and are included in the repository.
+
+To print a formatted summary in the terminal, run from the project root:
+
+```bash
+python analysis/errant/print_gec_results.py
+```
+
+To display the full per-category results:
+
+```bash
+python analysis/errant/print_gec_results.py --all-categories
+```
+
+The consolidated results are also saved in `analysis/errant/conll14/analysis_summary.txt`, which can be opened directly without running any scripts.
+
+### Results files
+
+| File | Contents |
+|---|---|
+| `analysis_summary.txt` | Readable summary of the main results |
+| `compiled_normalised/categories_wide.csv` | Per-category TP, FP, FN, precision, recall and F0.5 for all three models |
+| `bootstrap_categories.csv` | Paired bootstrap confidence intervals for differences between uniform and frequency |
+| `randomisation_categories.csv` | Approximate randomisation p-values and Holm-adjusted p-values |
+| `analysed_disagreements.csv` | Qualitative examples of differences between model predictions |
+| `sentence_categories.csv` | Sentence-level TP, FP and FN counts used in significance testing |
+
+### Reproducing the analysis
+
+The analysis scripts are located in `analysis/errant/`:
+
+- `bootstrap_categories.py` — sentence-level category extraction and paired bootstrap testing.
+- `randomisation_categories.py` — paired approximate randomisation with multiple-comparison correction.
+- `analyse_disagreements.py` — qualitative comparison of differing model predictions.
+- `print_gec_results.py` — formatted reporting of results.
+
+The scripts used ERRANT-normalised gold references (`conll14/gold_errant.m2`), which are generated locally and excluded from Git. The committed results can be viewed without this file, but reproducing the analysis requires regenerating it.
+
+**Interpretation:** No category-level differences were statistically significant after Holm correction. Individual category differences and qualitative examples should therefore be treated as exploratory findings.
