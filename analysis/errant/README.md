@@ -165,13 +165,50 @@ The consolidated results are also saved in `analysis/errant/conll14/analysis_sum
 
 ### Reproducing the analysis
 
-The analysis scripts are located in `analysis/errant/`:
+Run these commands from the repository root with the analysis environment activated, after generating `analysis/errant/conll14/gold_errant.m2` using **1. Prepare the reference data** above. The hypothesis M2 files and compiled category CSV used below are already committed.
 
-- `bootstrap_categories.py` — sentence-level category extraction and paired bootstrap testing.
-- `randomisation_categories.py` — paired approximate randomisation with multiple-comparison correction.
-- `analyse_disagreements.py` — qualitative comparison of differing model predictions.
-- `print_gec_results.py` — formatted reporting of results.
+These commands regenerate and overwrite the corresponding analysis CSVs. Both statistical procedures explicitly use 10,000 iterations and seed 42 to match the report.
 
-The scripts used ERRANT-normalised gold references (`conll14/gold_errant.m2`), which are generated locally and excluded from Git. The committed results can be viewed without this file, but reproducing the analysis requires regenerating it.
+#### Paired bootstrap confidence intervals
+
+```bash
+python analysis/errant/bootstrap_categories.py \
+  --gold analysis/errant/conll14/gold_errant.m2 \
+  --uniform analysis/errant/conll14/uniform.m2 \
+  --frequency analysis/errant/conll14/frequency.m2 \
+  --compiled analysis/errant/conll14/compiled_normalised/categories_wide.csv \
+  --out analysis/errant/conll14/sentence_categories.csv \
+  --iterations 10000 --seed 42
+```
+
+Writes `sentence_categories.csv` and `bootstrap_categories.csv`.
+
+#### Paired approximate randomisation
+
+```bash
+python analysis/errant/randomisation_categories.py \
+  --gold analysis/errant/conll14/gold_errant.m2 \
+  --uniform analysis/errant/conll14/uniform.m2 \
+  --frequency analysis/errant/conll14/frequency.m2 \
+  --compiled analysis/errant/conll14/compiled_normalised/categories_wide.csv \
+  --out analysis/errant/conll14/randomisation_categories.csv \
+  --iterations 10000 --seed 42
+```
+
+Writes `randomisation_categories.csv`, including Holm-adjusted p-values across the categories.
+
+#### Qualitative disagreement analysis
+
+```bash
+python analysis/errant/analyse_disagreements.py \
+  --gold analysis/errant/conll14/gold_errant.m2 \
+  --uniform analysis/errant/conll14/uniform.m2 \
+  --frequency analysis/errant/conll14/frequency.m2 \
+  --compiled analysis/errant/conll14/compiled_normalised/categories_wide.csv \
+  --out analysis/errant/conll14/analysed_disagreements.csv \
+  --categories R:SPELL R:NOUN:NUM
+```
+
+Writes `analysed_disagreements.csv` for the spelling and noun-number categories examined qualitatively in the report.
 
 **Interpretation:** No category-level differences were statistically significant after Holm correction. Individual category differences and qualitative examples should therefore be treated as exploratory findings.
