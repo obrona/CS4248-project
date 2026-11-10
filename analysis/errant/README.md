@@ -127,7 +127,7 @@ Remove the `NEW_MODEL` argument if only compiling the three existing models. Add
 1. Use `gold_errant.m2` for consistent ERRANT category comparisons. The original CoNLL gold contains legacy error categories that should not be mixed directly with modern ERRANT categories.
 2. Use the original CoNLL gold and M2Scorer for official CoNLL-2014 benchmark results. These scores differ from the ERRANT results above.
 3. ERRANT can select different annotator references for different models, so category-level reference support may vary.
-4. The compiled category CSVs are aggregate statistics. For paired bootstrap significance testing, resample the same sentence indices across models and recompute the metric. A dedicated significance-testing script is not yet included.
+4. The compiled category CSVs are aggregate statistics. For paired bootstrap significance testing, resample the same sentence indices across models and recompute the metric.
 5. All new models must use the same source sentences and sentence ordering.
 
 ## Per-category significance and qualitative analysis
